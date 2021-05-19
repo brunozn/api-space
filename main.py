@@ -39,27 +39,27 @@ def export_excel():
     sheet.write('D2', 'Board', bold)
     sheet.write('E2', 'Status', bold)
 
-    expenses = (
-        ['Rent', '2013-01-13', 1000],
-        ['Gas', '2013-01-14', 100],
-        ['Food', '2013-01-16', 300],
-        ['Gym', '2013-01-20', 50],
+    example = (
+        ['Titulo 1', 'Description 1', '2013-01-13', 2021, 'Done'],
+        ['Titulo 2', 'Description 2', '2013-01-14', 2021, 'Open'],
+        ['Titulo 3', 'Description3', '2013-01-16', 2021, 'Done'],
+        ['Titulo 4', 'Description4 ', '2013-01-20', 2021, 'Testing'],
     )
 
     row = 2
     col = 0
-    for item, date_str, cost in (expenses):
-        date = datetime.strptime(date_str, "%Y-%m-%d")
+    for item in example:
+        date = datetime.strptime(item[2], "%Y-%m-%d")
 
-        sheet.write_string(row, col, item)
-        sheet.write_string(row, col, item)
-        sheet.write_datetime(row, col + 1, date, date_format)
-        sheet.write_number(row, col + 2, cost)
-        sheet.write_string(row, col, item)
+        sheet.write_string(row, col, item[0])
+        sheet.write_string(row, col + 1, item[1])
+        sheet.write_datetime(row, col + 2, date, date_format)
+        sheet.write_number(row, col + 3, item[3])
+        sheet.write_string(row, col + 4, item[4])
         row += 1
 
     book.close()
 
 
-expor_issue()
-# export_excel()
+# expor_issue()
+export_excel()

@@ -9,20 +9,31 @@ URL = 'https://vortexz.jetbrains.space/api/http/projects/key:EVENLINEZ/planning/
       'creationTime,description)'
 
 
-def get_issues():
+def get_issues(sprint=None):
     headers = {'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json'}
     datas = requests.get(URL, headers=headers).json()["data"]
     issues = []
-    for x in datas:
-        # for y in x["sprints"]:
-        issue = {
-            "Title": x["title"],
-            "Description": x["description"],
-            "Created":  x["creationTime"]["iso"],
-            "Status": x["status"]["name"],
-            # "sprint": y["board"]["board"]["name"]
-        }
-        issues.append(issue)
+    if sprint:
+        sprint = str(sprint)
+        for x in datas:
+            for y in x["sprints"]:
+                if y["board"]["board"]["name"] == sprint:
+                    issue = {
+                        "Title": x["title"],
+                        "Description": x["description"],
+                        "Created": x["creationTime"]["iso"],
+                        "Status": x["status"]["name"],
+                    }
+                    issues.append(issue)
+    else:
+        for element in datas:
+            issue = {
+                "Title": element["title"],
+                "Description": element["description"],
+                "Created": element["creationTime"]["iso"],
+                "Status": element["status"]["name"],
+            }
+            issues.append(issue)
     return issues
 
 
@@ -59,4 +70,3 @@ def export_excel(isus):
 
 issues = get_issues()
 export_excel(issues)
-

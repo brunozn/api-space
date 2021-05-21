@@ -16,14 +16,14 @@ def get_issues(sprint=None):
 
     for element in datas:
         if sprint:
-            sprint = str(sprint)
             for y in element["sprints"]:
-                if y["board"]["board"]["name"] == sprint:
+                if y["board"]["board"]["name"] == str(sprint):
                     issue = {
                         "Title": element["title"],
                         "Description": element["description"],
                         "Created": element["creationTime"]["iso"],
                         "Status": element["status"]["name"],
+                        "Sprint": y["board"]["board"]["name"]
                     }
                     issues.append(issue)
         else:
@@ -32,6 +32,7 @@ def get_issues(sprint=None):
                 "Description": element["description"],
                 "Created": element["creationTime"]["iso"],
                 "Status": element["status"]["name"],
+                "Sprint": None
             }
             issues.append(issue)
     return issues
@@ -65,6 +66,10 @@ def export_excel(isus):
             sheet.write_string(row, col + 1, data['Description'])
         sheet.write_string(row, col + 2, data['Created'])
         sheet.write_string(row, col + 3, data['Status'])
+        if data['Sprint'] is None:
+            sheet.write_string(row, col + 4, '' )
+        else:
+            sheet.write_string(row, col + 4, data['Sprint'])
     book.close()
 
 

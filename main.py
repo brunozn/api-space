@@ -13,20 +13,20 @@ def get_issues(sprint=None):
     headers = {'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json'}
     datas = requests.get(URL, headers=headers).json()["data"]
     issues = []
-    if sprint:
-        sprint = str(sprint)
-        for x in datas:
-            for y in x["sprints"]:
+
+    for element in datas:
+        if sprint:
+            sprint = str(sprint)
+            for y in element["sprints"]:
                 if y["board"]["board"]["name"] == sprint:
                     issue = {
-                        "Title": x["title"],
-                        "Description": x["description"],
-                        "Created": x["creationTime"]["iso"],
-                        "Status": x["status"]["name"],
+                        "Title": element["title"],
+                        "Description": element["description"],
+                        "Created": element["creationTime"]["iso"],
+                        "Status": element["status"]["name"],
                     }
                     issues.append(issue)
-    else:
-        for element in datas:
+        else:
             issue = {
                 "Title": element["title"],
                 "Description": element["description"],

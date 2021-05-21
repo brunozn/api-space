@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import requests
 import os
 import xlsxwriter
@@ -42,8 +44,9 @@ def export_excel(isus):
     book = xlsxwriter.Workbook('Issues.xlsx')
     sheet = book.add_worksheet("Issues BOARD")
     sheet.set_column('A:A', 60)
-    sheet.set_column('B:B', 40)
-    sheet.set_column('C:C', 30)
+    sheet.set_column('B:B', 50)
+    sheet.set_column('C:C', 15)
+    sheet.set_column('D:D', 15)
     sheet.merge_range('A1:F1', "SPRINT", book.add_format({'bold': True, 'font_size': 14, 'align': 'center',
                                                           'valign': 'vcenter', 'font_name': 'Arial',
                                                           'color': '#171717'}))
@@ -54,6 +57,7 @@ def export_excel(isus):
         sheet.write(row_num, col_num, columns[col_num], bold)
 
     for idy, data in enumerate(isus):
+        date_format = datetime.strftime(datetime.strptime((data['Created']), "%Y-%m-%dT%H:%M:%S.%fZ"), "%d/%m/%Y")
         col = 0
         row = 2 + idy
         if data['Title'] is None:
@@ -64,10 +68,10 @@ def export_excel(isus):
             sheet.write_string(row, col + 1, '', )
         else:
             sheet.write_string(row, col + 1, data['Description'])
-        sheet.write_string(row, col + 2, data['Created'])
+        sheet.write(row, col + 2, date_format)
         sheet.write_string(row, col + 3, data['Status'])
         if data['Sprint'] is None:
-            sheet.write_string(row, col + 4, '' )
+            sheet.write_string(row, col + 4, '')
         else:
             sheet.write_string(row, col + 4, data['Sprint'])
     book.close()

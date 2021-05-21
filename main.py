@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import sys
 import requests
 import os
 import xlsxwriter
@@ -15,7 +15,6 @@ def get_issues(sprint=None):
     headers = {'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json'}
     datas = requests.get(URL, headers=headers).json()["data"]
     issues = []
-
     for element in datas:
         if sprint:
             for y in element["sprints"]:
@@ -77,5 +76,11 @@ def export_excel(isus):
     book.close()
 
 
-issues = get_issues()
-export_excel(issues)
+def main(ar):
+    arg = None
+    if len(ar) > 1: arg = sys.argv[1]
+    issues = get_issues(arg)
+    export_excel(issues)
+
+
+main(sys.argv)
